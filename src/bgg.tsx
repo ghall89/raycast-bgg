@@ -1,20 +1,22 @@
-import { ActionPanel, Action, List, showToast, Toast } from '@raycast/api';
-import { useFetch, useCachedState } from '@raycast/utils';
+import { List, showToast, Toast } from '@raycast/api';
+import { useFetch } from '@raycast/utils';
 import { useState } from 'react';
 
-import { BggFetchResponse, BoardGame } from './models';
-import { parseXml } from './utils';
+import { BggFetchResponse } from './models';
+import { parseResults } from './utils';
 import ListItem from './components/ListItem';
+import useHistory from './useHistory';
 
 export default function Command() {
   const [searchText, setSearchText] = useState<string>('');
-  const [history, setHistory] = useCachedState<BoardGame[]>('history', []);
+
+  const { history } = useHistory();
 
   const { isLoading, data } = useFetch<BggFetchResponse>(
     `https://boardgamegeek.com/xmlapi2/search?query=${searchText}`,
     {
       execute: !!searchText,
-      parseResponse: (response: Response) => parseXml(response),
+      parseResponse: (response: Response) => parseResults(response),
       onError: (error) => {
         console.error(error);
         showToast(Toast.Style.Failure, 'Could not fetch games');
@@ -22,10 +24,6 @@ export default function Command() {
       keepPreviousData: true,
     },
   );
-
-  function addToHistory(item: BoardGame) {
-    setHistory([item, ...history]);
-  }
 
   return (
     <List
@@ -37,8 +35,8 @@ export default function Command() {
       isLoading={isLoading}
     >
       {data
-        ? data?.map((item) => <ListItem key={item.bggId} item={item} addToHistory={addToHistory} />)
-        : history?.map((item) => <ListItem key={item.bggId} item={item} addToHistory={addToHistory} />)}
+        ? data?.map((item) => <ListItem key={item.bggId} item={item} />)
+        : history?.map((item) => <ListItem key={item.bggId} item={item} />)}
     </List>
   );
 }
