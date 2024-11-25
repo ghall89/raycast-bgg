@@ -2,10 +2,10 @@ import { List, showToast, Toast } from '@raycast/api';
 import { useFetch } from '@raycast/utils';
 import { useState } from 'react';
 
-import { BggFetchResponse } from './models';
-import { parseResults } from './utils';
 import ListItem from './components/ListItem';
+import { BggFetchResponse } from './models';
 import useHistory from './useHistory';
+import { parseResults } from './utils';
 
 export default function Command() {
   const [searchText, setSearchText] = useState<string>('');

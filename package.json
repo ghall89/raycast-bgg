@@ -11,7 +11,7 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "bgg",
+      "name": "index",
       "title": "bgg",
       "subtitle": "Board Game Geek",
       "description": "Search BoardGameGeek.com",

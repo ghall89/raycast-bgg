@@ -1,8 +1,8 @@
 import { ActionPanel, Detail, Toast, showToast } from '@raycast/api';
 import { useFetch } from '@raycast/utils';
 
-import { parseGameData } from '../utils';
 import { BoardGame, GameDetails } from '../models';
+import { parseGameData } from '../utils';
 import UrlActions from './UrlActions';
 
 interface DetailsProps {
