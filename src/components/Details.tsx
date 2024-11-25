@@ -1,7 +1,7 @@
 import { ActionPanel, Detail, Toast, showToast } from '@raycast/api';
 import { useFetch } from '@raycast/utils';
 
-import { BoardGame, GameDetails } from '../models';
+import { BoardGame, BggDetailsResponse } from '../models';
 import { parseGameData } from '../utils';
 import UrlActions from './UrlActions';
 
@@ -10,7 +10,7 @@ interface DetailsProps {
 }
 
 export default function Details({ item }: DetailsProps) {
-  const { isLoading, data } = useFetch<GameDetails>(`https://boardgamegeek.com/xmlapi/boardgame/${item.bggId}`, {
+  const { isLoading, data } = useFetch<BggDetailsResponse>(`https://boardgamegeek.com/xmlapi/boardgame/${item.bggId}`, {
     execute: !!item,
     parseResponse: (response: Response) => parseGameData(response),
     onError: (error) => {
@@ -23,7 +23,7 @@ export default function Details({ item }: DetailsProps) {
   return (
     <Detail
       isLoading={isLoading}
-      markdown={`![](${data?.img})`}
+      markdown={data?.description?.split('<br/>')?.join('\n')}
       navigationTitle={item.title}
       metadata={
         <Detail.Metadata>

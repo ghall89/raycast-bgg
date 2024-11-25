@@ -1,4 +1,4 @@
-import { Action, ActionPanel, List, useNavigation } from '@raycast/api';
+import { Action, ActionPanel, List, Icon, useNavigation } from '@raycast/api';
 
 import { BoardGame } from '../models';
 import useHistory from '../useHistory';
@@ -20,6 +20,7 @@ export default function ListItem({ item }: ListItemProps) {
         <ActionPanel>
           <Action
             title="View Details"
+            icon={Icon.AppWindowSidebarRight}
             onAction={() => {
               addToHistory(item);
               push(<Details item={item} />);

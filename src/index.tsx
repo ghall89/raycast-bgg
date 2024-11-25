@@ -3,7 +3,7 @@ import { useFetch } from '@raycast/utils';
 import { useState } from 'react';
 
 import ListItem from './components/ListItem';
-import { BggFetchResponse } from './models';
+import { BggSearchResponse } from './models';
 import useHistory from './useHistory';
 import { parseResults } from './utils';
 
@@ -12,7 +12,7 @@ export default function Command() {
 
   const { history } = useHistory();
 
-  const { isLoading, data } = useFetch<BggFetchResponse>(
+  const { isLoading, data } = useFetch<BggSearchResponse>(
     `https://boardgamegeek.com/xmlapi2/search?query=${searchText}`,
     {
       execute: !!searchText,
@@ -34,9 +34,11 @@ export default function Command() {
       searchBarPlaceholder="Search for a board game"
       isLoading={isLoading}
     >
-      {data
-        ? data?.map((item) => <ListItem key={item.bggId} item={item} />)
-        : history?.map((item) => <ListItem key={item.bggId} item={item} />)}
+      {data ? (
+        data?.map((item) => <ListItem key={item.bggId} item={item} />)
+      ) : (
+        <List.Section title="Recent">{history?.map((item) => <ListItem key={item.bggId} item={item} />)}</List.Section>
+      )}
     </List>
   );
 }

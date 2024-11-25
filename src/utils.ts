@@ -1,24 +1,26 @@
 import { showToast, Toast } from '@raycast/api';
 import convert from 'xml-js';
-import { BggFetchResponse, GameDetails } from './models';
+import { BggSearchResponse, BggDetailsResponse, BoardGameXml, GameDetailsXml } from './models';
 
-export async function parseResults(response: Response): Promise<BggFetchResponse> {
-  let resultsArr: BggFetchResponse = [];
+export async function parseResults(response: Response): Promise<BggSearchResponse> {
+  const resultsArr: BggSearchResponse = [];
 
   try {
     const xml = await response.text();
-    const obj = convert.xml2js(xml);
+    const obj = convert.xml2js(xml) as BoardGameXml;
 
     const elements = obj.elements?.[0]?.elements || [];
 
-    resultsArr = elements.map((el) => {
+    elements.forEach((el) => {
       const title = el.elements.find((e) => e.name === 'name');
 
-      return {
+      if (!title) return;
+
+      resultsArr.push({
         bggId: el.attributes.id,
         title: title.attributes.value,
         url: `https://boardgamegeek.com/boardgame/${el.attributes.id}`,
-      };
+      });
     });
   } catch (error) {
     console.error(error);
@@ -28,23 +30,25 @@ export async function parseResults(response: Response): Promise<BggFetchResponse
   return resultsArr;
 }
 
-export async function parseGameData(response: Response): Promise<GameDetails | undefined> {
+export async function parseGameData(response: Response): Promise<BggDetailsResponse> {
+  const gameData: BggDetailsResponse = {};
+
   try {
     const xml = await response.text();
 
-    const result = convert.xml2js(xml, { compact: true });
+    const result = convert.xml2js(xml, { compact: true }) as GameDetailsXml;
 
-    const gameData = {
-      bggId: result?.boardgames?.boardgame?._attributes?.objectid,
-      title: result?.boardgames?.boardgame.name?._text,
-      img: result?.boardgames?.boardgame?.image?._text,
-      minPlayers: parseInt(result?.boardgames?.boardgame?.minplayers?._text),
-      maxPlayers: parseInt(result?.boardgames?.boardgame?.maxplayers?._text),
-      avgPlaytime: parseInt(result?.boardgames?.boardgame?.playingtime?._text),
-    };
-    return gameData;
+    gameData.bggId = result?.boardgames?.boardgame?._attributes?.objectid;
+    gameData.title = result?.boardgames?.boardgame.name?._text;
+    gameData.img = result?.boardgames?.boardgame?.image?._text;
+    gameData.description = result?.boardgames?.boardgame?.description?._text;
+    gameData.minPlayers = parseInt(result?.boardgames?.boardgame?.minplayers?._text);
+    gameData.maxPlayers = parseInt(result?.boardgames?.boardgame?.maxplayers?._text);
+    gameData.avgPlaytime = parseInt(result?.boardgames?.boardgame?.playingtime?._text);
   } catch (error) {
     console.error(error);
     showToast(Toast.Style.Failure, 'Could not parse response');
   }
+
+  return gameData;
 }

@@ -9,7 +9,7 @@ export default function useHistory() {
     const updatedHistory = history;
 
     const index = updatedHistory.findIndex((i) => i.bggId === item.bggId);
-    console.log(index);
+
     if (index >= 0) {
       updatedHistory.splice(index, 1);
     }
