@@ -38,13 +38,13 @@ export async function parseGameData(response: Response): Promise<BggDetailsRespo
 
     const result = convert.xml2js(xml, { compact: true }) as GameDetailsXml;
 
-    gameData.bggId = result?.boardgames?.boardgame?._attributes?.objectid;
-    gameData.title = result?.boardgames?.boardgame.name?._text;
-    gameData.img = result?.boardgames?.boardgame?.image?._text;
-    gameData.description = result?.boardgames?.boardgame?.description?._text;
-    gameData.minPlayers = parseInt(result?.boardgames?.boardgame?.minplayers?._text);
-    gameData.maxPlayers = parseInt(result?.boardgames?.boardgame?.maxplayers?._text);
-    gameData.avgPlaytime = parseInt(result?.boardgames?.boardgame?.playingtime?._text);
+    gameData.bggId = result?.items?.item?._attributes?.objectid;
+    gameData.title = result?.items?.item.name?._text;
+    gameData.img = result?.items?.item?.thumbnail?._text;
+    gameData.description = result?.items?.item?.description?._text;
+    gameData.minPlayers = parseInt(result?.items?.item?.minplayers?._attributes?.value);
+    gameData.maxPlayers = parseInt(result?.items?.item?.maxplayers?._attributes?.value);
+    gameData.avgPlaytime = parseInt(result?.items?.item?.playingtime?._attributes?.value);
   } catch (error) {
     console.error(error);
     showToast(Toast.Style.Failure, 'Could not parse response');

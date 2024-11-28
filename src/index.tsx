@@ -34,7 +34,7 @@ export default function Command() {
       searchBarPlaceholder="Search for a board game"
       isLoading={isLoading}
     >
-      {data ? (
+      {data && !!searchText ? (
         data?.map((item) => <ListItem key={item.bggId} item={item} />)
       ) : (
         <List.Section title="Recent">{history?.map((item) => <ListItem key={item.bggId} item={item} />)}</List.Section>

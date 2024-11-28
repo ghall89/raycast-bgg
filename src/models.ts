@@ -33,28 +33,34 @@ export interface BoardGameXml {
 }
 
 export interface GameDetailsXml {
-  boardgames: {
-    boardgame: {
+  items: {
+    item: {
       _attributes: {
         objectid: string;
       };
       name: {
         _text: string;
       };
-      image: {
+      thumbnail: {
         _text: string;
       };
       description: {
         _text: string;
       };
       minplayers: {
-        _text: string;
+        _attributes: {
+          value: string;
+        };
       };
       maxplayers: {
-        _text: string;
+        _attributes: {
+          value: string;
+        };
       };
       playingtime: {
-        _text: string;
+        _attributes: {
+          value: string;
+        };
       };
     };
   };

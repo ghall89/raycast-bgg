@@ -10,7 +10,7 @@ interface DetailsProps {
 }
 
 export default function Details({ item }: DetailsProps) {
-  const { isLoading, data } = useFetch<BggDetailsResponse>(`https://boardgamegeek.com/xmlapi/boardgame/${item.bggId}`, {
+  const { isLoading, data } = useFetch<BggDetailsResponse>(`https://boardgamegeek.com/xmlapi2/thing?id=${item.bggId}`, {
     execute: !!item,
     parseResponse: (response: Response) => parseGameData(response),
     onError: (error) => {
@@ -23,7 +23,12 @@ export default function Details({ item }: DetailsProps) {
   return (
     <Detail
       isLoading={isLoading}
-      markdown={data?.description?.split('<br/>')?.join('\n')}
+      markdown={`
+![](${data?.img})
+
+
+${data?.description?.split('<br/>')?.join('\n')}
+        `}
       navigationTitle={item.title}
       metadata={
         <Detail.Metadata>
