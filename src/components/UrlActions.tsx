@@ -13,7 +13,11 @@ export default function UrlActions({ item }: UrlActionsProps) {
   return (
     <>
       <Action.OpenInBrowser url={item.url} onOpen={() => addToHistory(item)} />
-      <Action.CopyToClipboard content={item.url} onCopy={() => addToHistory(item)} />
+      <Action.CopyToClipboard
+        content={item.url}
+        onCopy={() => addToHistory(item)}
+        shortcut={{ modifiers: ['cmd', 'shift'], key: 'c' }}
+      />
     </>
   );
 }

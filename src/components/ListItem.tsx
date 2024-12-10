@@ -16,6 +16,7 @@ export default function ListItem({ item }: ListItemProps) {
   return (
     <List.Item
       title={item.title}
+      icon={Icon.ChessPiece}
       actions={
         <ActionPanel>
           <Action
