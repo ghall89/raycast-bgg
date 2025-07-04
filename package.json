@@ -20,9 +20,9 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.86.0",
-    "@raycast/utils": "^1.17.0",
-    "xml-js": "^1.6.11"
+    "@raycast/api": "^1.100.3",
+    "@raycast/utils": "^2.1.0",
+    "bgg-client": "^0.1.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.11",

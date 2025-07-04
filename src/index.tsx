@@ -1,11 +1,10 @@
 import { List } from '@raycast/api';
 import { useFetch, showFailureToast } from '@raycast/utils';
 import { useState, useMemo } from 'react';
+import { SearchResult } from 'bgg-client';
+import { parseResults } from 'bgg-client/src/lib/parsers';
 
 import ListItem from './components/ListItem';
-import { BoardGame } from './models';
-
-import { parseResults } from './utils';
 
 export default function Command() {
   const [searchText, setSearchText] = useState<string>('');
@@ -14,7 +13,11 @@ export default function Command() {
     `https://boardgamegeek.com/xmlapi2/search?query=${encodeURIComponent(searchText)}`,
     {
       execute: !!searchText,
-      parseResponse: (response: Response) => parseResults(response),
+      parseResponse: async (response: Response) => {
+        const xml = await response.text();
+
+        return parseResults(xml);
+      },
       onError: (error) => {
         console.error(error);
         showFailureToast('Could not fetch games');
@@ -23,7 +26,7 @@ export default function Command() {
     },
   );
 
-  const resultMemo = useMemo<BoardGame[]>(() => data || [], [data]);
+  const resultMemo = useMemo<SearchResult[]>(() => data || [], [data]);
 
   return (
     <List

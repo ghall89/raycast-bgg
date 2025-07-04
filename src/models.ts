@@ -7,8 +7,8 @@ export interface BoardGame {
   url: string;
 }
 export interface GameDetails {
-  bggId?: string;
-  title?: string;
+  bggId: string;
+  title: string;
   img?: string;
   description?: string;
   minPlayers?: number;

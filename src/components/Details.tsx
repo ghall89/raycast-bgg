@@ -1,18 +1,21 @@
 import { List } from '@raycast/api';
 import { showFailureToast } from '@raycast/utils';
 import { useFetch } from '@raycast/utils';
-
-import { BoardGame, BggDetailsResponse } from '../models';
-import { parseGameData } from '../utils';
+import { GameDetails } from 'bgg-client';
+import { parseGameData } from 'bgg-client/src/lib/parsers';
 
 interface DetailsProps {
-  item: BoardGame;
+  item: GameDetails;
 }
 
 export default function Details({ item }: DetailsProps) {
-  const { isLoading, data } = useFetch<BggDetailsResponse>(`https://boardgamegeek.com/xmlapi2/thing?id=${item.bggId}`, {
+  const { isLoading, data } = useFetch(`https://boardgamegeek.com/xmlapi2/thing?id=${item.bggId}`, {
     execute: !!item,
-    parseResponse: (response: Response) => parseGameData(response),
+    parseResponse: async (response: Response) => {
+      const xml = await response.text();
+
+      return parseGameData(xml);
+    },
     onError: (error) => {
       console.error(error);
       showFailureToast('Could not fetch game details');
